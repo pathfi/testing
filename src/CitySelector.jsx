@@ -7,13 +7,26 @@ const CitySelector = () => {
     const [selectedCountry, setSelectedCountry] = useState('');
     const [selectedState, setSelectedState] = useState('');
     const [selectedCity, setSelectedCity] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
     // Fetch countries on component mount
     useEffect(() => {
         const fetchCountries = async () => {
-            const response = await fetch('https://crio-location-selector.onrender.com/countries');
-            const data = await response.json();
-            setCountries(data);
+            setLoading(true);
+            setError('');
+            try {
+                const response = await fetch('https://crio-location-selector.onrender.com/countries');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch countries');
+                }
+                const data = await response.json();
+                setCountries(data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
         };
         fetchCountries();
     }, []);
@@ -24,10 +37,21 @@ const CitySelector = () => {
         setSelectedCountry(country);
         setSelectedState('');
         setSelectedCity('');
-        const response = await fetch(`https://crio-location-selector.onrender.com/country=${country}/states`);
-        const data = await response.json();
-        setStates(data);
-        setCities([]); // Reset cities when country changes
+        setLoading(true);
+        setError('');
+        try {
+            const response = await fetch(`https://crio-location-selector.onrender.com/country=${country}/states`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch states');
+            }
+            const data = await response.json();
+            setStates(data);
+            setCities([]); // Reset cities when country changes
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     // Fetch cities when a state is selected
@@ -35,9 +59,20 @@ const CitySelector = () => {
         const state = e.target.value;
         setSelectedState(state);
         setSelectedCity('');
-        const response = await fetch(`https://crio-location-selector.onrender.com/country=${selectedCountry}/state=${state}/cities`);
-        const data = await response.json();
-        setCities(data);
+        setLoading(true);
+        setError('');
+        try {
+            const response = await fetch(`https://crio-location-selector.onrender.com/country=${selectedCountry}/state=${state}/cities`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch cities');
+            }
+            const data = await response.json();
+            setCities(data);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     // Display selected location
@@ -49,8 +84,10 @@ const CitySelector = () => {
     };
 
     return (
-        <div style={{display:'flex', flexDirection:'column', alignItems:'center', marginTop:'20px'}}>
+        <div>
             <h1>Select Your Location</h1>
+            {loading && <p>Loading...</p>}
+            {error && <p style={{ color: 'red' }}>Error: {error}</p>}
             <div>
                 <label htmlFor="country">Select Country:</label>
                 <select id="country" value={selectedCountry} onChange={handleCountryChange}>
