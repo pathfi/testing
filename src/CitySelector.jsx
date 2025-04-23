@@ -69,8 +69,8 @@ const CitySelector = () => {
             const data = await response.json();
             setCities(data);
         } catch (err) {
-            setError(err.message);
-        } finally {
+            setError('Something went wrong. Please try again!');
+        }finally {
             setLoading(false);
         }
     };
@@ -89,7 +89,8 @@ const CitySelector = () => {
         Select Location
     </h2>
     {loading && <p>Loading...</p>}
-    {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+    {error && <p style={{ color: 'red' }}>{error}</p>}
+
     <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '1rem' }}>
         <select
             value={selectedCountry}
