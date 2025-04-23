@@ -84,39 +84,55 @@ const CitySelector = () => {
     };
 
     return (
-        <div>
-            <h1>Select Your Location</h1>
-            {loading && <p>Loading...</p>}
-            {error && <p style={{ color: 'red' }}>Error: {error}</p>}
-            <div>
-                <label htmlFor="country">Select Country:</label>
-                <select id="country" value={selectedCountry} onChange={handleCountryChange}>
-                    <option value="">--Select Country--</option>
-                    {countries.map(country => (
-                        <option key={country} value={country}>{country}</option>
-                    ))}
-                </select>
-            </div>
-            <div>
-                <label htmlFor="state">Select State:</label>
-                <select id="state" value={selectedState} onChange={handleStateChange} disabled={!selectedCountry}>
-                    <option value="">--Select State--</option>
-                    {states.map(state => (
-                        <option key={state} value={state}>{state}</option>
-                    ))}
-                </select>
-            </div>
-            <div>
-                <label htmlFor="city">Select City:</label>
-                <select id="city" value={selectedCity} onChange={(e) => setSelectedCity(e.target.value)} disabled={!selectedState}>
-                    <option value="">--Select City--</option>
-                    {cities.map(city => (
-                        <option key={city} value={city}>{city}</option>
-                    ))}
-                </select>
-            </div>
-            <div id="selected-location">{displaySelectedLocation()}</div>
+        <div style={{ textAlign: 'center', padding: '2rem' }}>
+    <h2 style={{ fontWeight: 'bold', fontSize: '24px', marginBottom: '1rem' }}>
+        Select Location
+    </h2>
+    {loading && <p>Loading...</p>}
+    {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+    <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '1rem' }}>
+        <select
+            value={selectedCountry}
+            onChange={handleCountryChange}
+            style={{ padding: '0.5rem', minWidth: '150px' }}
+        >
+            <option value="">Select Country</option>
+            {countries.map((country) => (
+                <option key={country} value={country}>{country}</option>
+            ))}
+        </select>
+
+        <select
+            value={selectedState}
+            onChange={handleStateChange}
+            disabled={!selectedCountry}
+            style={{ padding: '0.5rem', minWidth: '150px' }}
+        >
+            <option value="">Select State</option>
+            {states.map((state) => (
+                <option key={state} value={state}>{state}</option>
+            ))}
+        </select>
+
+        <select
+            value={selectedCity}
+            onChange={(e) => setSelectedCity(e.target.value)}
+            disabled={!selectedState}
+            style={{ padding: '0.5rem', minWidth: '150px' }}
+        >
+            <option value="">Select City</option>
+            {cities.map((city) => (
+                <option key={city} value={city}>{city}</option>
+            ))}
+        </select>
+    </div>
+    {selectedCity && (
+        <div id="selected-location" style={{ marginTop: '1rem', fontWeight: '500' }}>
+            You selected {selectedCity}, {selectedState}, {selectedCountry}
         </div>
+    )}
+</div>
+
     );
 };
 
